@@ -102,3 +102,4 @@ let obj = {
  *         'string' then means only a string; a value that can be missing is 'string | null'.
  *    Handle it with: if (value) {...}, optional chaining ?. , or a default with ??
  */
+
