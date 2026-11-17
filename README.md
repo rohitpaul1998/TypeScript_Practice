@@ -1,2 +1,3 @@
 # TypeScript_Practice
-My space for learning TS and practices
+Today (November 16th), I learned and practiced the following TypeScript concepts:
+
