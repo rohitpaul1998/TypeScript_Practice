@@ -80,3 +80,228 @@ if (typeof yolo === "string") {
 else if (typeof yolo === "number") {
     console.log(yolo.toPrecision(3));
 }
+/**
+ *
+ * NEVER TYPE
+ *
+ * @Notes_for_Never_Type
+ * 1. Never represents values that never occur.
+ * 2. Its used in functions that do not return a value because they either throw an error or never finish running
+ * 3. Unlike void (which returns undefined), a never type indicates that a value or return never happens at all.
+ *
+ */
+// example - never type - Functions That Always Throw Errors
+// When a function unconditionally throws an exception, it never reaches an endpoint. Hence, TS gives us never type to signal that the execution must stop
+// with immediate effect
+function error(message) {
+    throw new Error(message);
+}
+// example - never type - Infinite loops
+// A function containing an infinite loop without a break or return will never complete.
+function infiniteLoop() {
+    while (true) {
+        console.log("Server runs...");
+    }
+}
+/**
+ *
+ * THE VOID TYPE
+ *
+ * @Notes
+ * 1. Void is used in functions that we deem to not want to return anything
+ * 2. It signifies abssence of return type
+ * 3. Void is commonly used for functions that performs actions that dont return a value making our intent clear
+ * 4. One thing to note is that when we dont return anything of value, we generally dont have to use console.log(), rather we can just simply call the fn.
+ *
+ */
+// example of void type usage
+var clickAction = function (clicking) {
+    console.log("I have clicked on this: ".concat(clicking));
+};
+clickAction("submit button");
+/**
+ *
+ * TUPLES
+ *
+ *
+ * @Notes
+ * 1. Tuples are a special type that are exclusive only to TS and they dont exist in JS
+ * 2. Tuples are an array types of fixed length, ordered with fixed set of types
+ * 3. In TS, tuples dont actually prevent us from pushing on extra elements after creating
+ */
+// example for tuple 
+var sampleTuple = [255, 0, 222]; // --> this is valid
+var fruitsAndTheirPriceResponse = ["Apple", 20]; // --> see how it follows the order. But if you change the order in values..
+// const fruitsAndTheirPriceResponse2: fruitsHTTPResponse = [2033.2, "banana"] // --> this will error out saying Type 'number' is not assignable to type 'string'
+// In TS, tuples dont actually prevent us from pushing on extra elements after creating . It doesnt complain if i push an extra number
+// This has to do with how tuples had been implemented behind the scenes.. so its a limitation
+fruitsAndTheirPriceResponse.push(2020);
+fruitsAndTheirPriceResponse.push(2323);
+fruitsAndTheirPriceResponse.push("2020");
+fruitsAndTheirPriceResponse.pop();
+fruitsAndTheirPriceResponse.pop();
+fruitsAndTheirPriceResponse.pop();
+fruitsAndTheirPriceResponse.pop();
+console.log(fruitsAndTheirPriceResponse);
+// We can also make an array of tuples
+var fruitBasketArrayOfTuples = [["apple", 2], ["banana", 8], ["orange", 5]];
+console.log(fruitBasketArrayOfTuples);
+/**
+ *
+ * ENUMS
+ *
+ * @notes
+ * 1. Enums allows us to define a set of named constants or options
+ * 2. We can give these constants numeric or string values
+ *
+ */
+// example - usage of enums
+var activityStatus;
+(function (activityStatus) {
+    activityStatus[activityStatus["ONLINE"] = 0] = "ONLINE";
+    activityStatus[activityStatus["OFFLINE"] = 1] = "OFFLINE";
+    activityStatus[activityStatus["BUSY"] = 2] = "BUSY";
+    activityStatus[activityStatus["AWAY"] = 3] = "AWAY";
+    activityStatus[activityStatus["OUT_OF_OFFICE"] = 4] = "OUT_OF_OFFICE"; // value 4
+})(activityStatus || (activityStatus = {}));
+var myStatus = activityStatus.ONLINE;
+function isBusy(status) {
+    return status === activityStatus.BUSY;
+}
+console.log(isBusy(activityStatus.OFFLINE));
+// example - usage of enums - assigning user defined values
+// A string enum: each option is given its own text value (WIN = "Win").
+// Left side = name used in code (gameResults.WIN), right side = actual stored value ("Win").
+// Why assign values: readable in logs/reports ("Win" instead of 0), values don't shift
+// if options are added or reordered, and they match text coming from APIs/databases.
+var gameResults;
+(function (gameResults) {
+    gameResults["WIN"] = "Win";
+    gameResults["LOSS"] = "Loss";
+    gameResults["DRAW"] = "Draw";
+})(gameResults || (gameResults = {}));
+// usage of above enum in a function
+var lotteryResults = function (gameResult) {
+    console.log("Today's lottery result is a ".concat(gameResult));
+};
+lotteryResults(gameResults.WIN);
+// another example
+var anotherLottery = function (result) {
+    if (result === gameResults.WIN) {
+        console.log("Congratulations you have won the lottery!");
+    }
+    else if (result === gameResults.DRAW) {
+        console.log("Unfortunately, you drew with another person!");
+    }
+    else {
+        console.log("Unfortunately, you've lost the lottery.");
+    }
+};
+anotherLottery(gameResults.WIN);
+anotherLottery(gameResults.LOSS);
+anotherLottery(gameResults.DRAW);
+function gettingDirections(direction) {
+    // console.log(object);
+}
+gettingDirections("Left"); // ✅
+// gettingDirections("ewfsef") // ❌
+/**
+ *
+ * UNION TYPES
+ *
+ * @Notes
+ * 1. What they are: Sometimes a value can be legitimately be more than 1 type. An ID might be a number 123 or a string "A-133" and a value might be missing or null
+ * 2. A union type says "this can be this or that" using | symbol
+ * 3. TS allows any of the listed types and still rejects everything else.
+ *
+ */
+// example 
+var id;
+id = 10;
+id = "A10";
+// id = true --> this erors out because boolean isnt in the union. Type 'boolean' is not assignable to type 'string | number'
+// Using a union value: check first. Because the value could be either type. Typescript wont allow you to call .toUpperCase() for constant or variable
+// with string | number union type because a number doesnt have that method. So first you check which type it is with typeof operator and inside
+// each branch, based on the data that is passed in arguments, TS will know its type in each branch. This is called type narrowing.
+var printSomething = function (id) {
+    if (typeof id === "string") {
+        console.log(id.toUpperCase());
+    }
+    else {
+        console.log(id.toPrecision(2));
+    }
+};
+printSomething(98.99);
+printSomething("oh how gold and silver are useless now!");
+var rohit = {
+    fullName: "Rohit Paul",
+    personAge: 28,
+    personNationality: "Indian",
+    employeeId: "RP03937",
+    employeeCompanyName: "Amazon",
+    employeeTitle: "Software Engineer I",
+    employeeSalary: 2400000,
+    employeeLocation: "Bengaluru"
+};
+console.log(rohit);
+/**
+ *
+ * REST PARAMETERS
+ *
+ * @Notes
+ * 1. Sometimes you dont know how many arguments you may pass to a function
+ * 2. It could be 5 or 10 or 20. So rest parameters denoted by "..." before the name collects the remaining arguments to a single array
+ * 3. You write it with 3 dots ... before the name and its type is an array type like number[]
+ *
+ */
+// basic example
+var sum = function () {
+    var nums = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        nums[_i] = arguments[_i];
+    }
+    var totalNo = 0;
+    for (var _a = 0, nums_1 = nums; _a < nums_1.length; _a++) {
+        var n = nums_1[_a];
+        totalNo += n;
+    }
+    return totalNo;
+};
+console.log(sum(1, 2, 3, 4, 5, 100));
+// another example
+function printSomeNames(greeting) {
+    var names = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        names[_i - 1] = arguments[_i];
+    }
+    names.forEach(function (name) {
+        console.log("".concat(greeting, ", ").concat(name));
+    });
+}
+printSomeNames("Hey", "Jack", "Locke", "Sawyer", "Kate");
+/**
+ *
+ * FOR EACH METHOD
+ *
+ * @NOTES
+ * 1. This is an array method that returns a function once for every item in the array
+ * 2. We give it a callback inside and it hands each item to that call back, one at a time
+ *
+ */
+// basic example
+var someNames = ["Rohit", "Michael", "Locke", "Jack", "Ricardos"];
+someNames.forEach(function (name) {
+    console.log("Hello, ".concat(name));
+});
+someNames.forEach(function (name1, index) {
+    console.log("".concat(index + 1, ". ").concat(name1));
+});
+var add = function (x, y) { return x + y; };
+console.log(add(10101, 1010));
+var multiply = function (x, y) { return x * y; };
+console.log(multiply(2424, 2424));
+// example 2 - calling a function inside the parameter of another function
+function totalCalc(a, b, operation) {
+    return operation(a, b);
+}
+console.log(totalCalc(12, 12, add));
